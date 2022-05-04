@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url }}/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js"
+        kr-public-key="{{ js_token }}" kr-post-url-success="/respuesta/">
+        </script>
+    <link rel="stylesheet"
+        href="{{ url }}/static/js/krypton-client/V4.0/ext/classic-reset.css">
+    <script src="{{ url }}/static/js/krypton-client/V4.0/ext/classic.js">
+    </script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Inicio</title>
+</head>
+
+<body class="body-izi">
+    <div class="form-izi">
+        <img src="{% static '/img/izipay3.png' %}" class="logo-png" alt="">
+        <div id="valdas" class="kr-embedded" kr-form-token="{{ formToken }}">
+            <div class="kr-pan"></div>
+            <div class="kr-expiry"></div>
+            <div class="kr-security-code"></div>
+            <!-- payment form submit button -->
+            <button class="kr-payment-button"></button>
+            <!-- error zone -->
+            <div class="kr-form-error"></div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var cont = 0;
+        KR.onError( function(event) {
+            var code = event.errorCode;
+            console.log(code);
+            console.error(cont);
+            if(code != null){
+                cont = cont + 1;
+            }
+
+            if(cont>1){
+                console.log("se cancelo");
+                document.getElementById("valdas").style.display = "none";
+            }
+        });
+        KR.onSubmit( function(event) {
+            //console.log(event);
+            //console.log(event.clientAnswer.toString());
+            console.log(event.hashAlgorithm.toString());
+            console.log(event.rawClientAnswer);
+            console.log(event.hashKey.toString());
+            console.log(event.hash.toString());
+            $.ajax({
+                url : '/validador/',
+                data : { 
+                    kr_hash_algorithm : event.hashAlgorithm.toString(),
+                    kr_answer : event.rawClientAnswer,
+                    kr_hash_key : event.hashKey.toString(),
+                    kr_hash : event.hash.toString()
+                },
+                type : 'POST',
+                dataType : 'json',
+                success : function(json) {
+                    if (json == 'true')
+                    {
+                        Swal.fire(
+                        'Resultado',
+                        'Autorizacion Exitosa!',
+                        'success'
+                        )
+                    }
+                },
+                error : function(xhr, status) {
+                    console.log(xhr);
+                    console.log(json.parse(xhr));
+                    console.log(xhr + ' ' + status);
+                    alert('Disculpe, existió un problema');
+                }
+            });
+        return false;
+        });
+    </script>
+</body>
+
+</html>

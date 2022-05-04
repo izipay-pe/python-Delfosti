@@ -1,0 +1,34 @@
+{% load static %}
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Izipay - Pasarela</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <script>
+        window.console = window.console || function (t) { };
+    </script>
+    <script>
+        if (document.location.search.match(/type=embed/gi)) {
+            window.parent.postMessage("resize", "*");
+        }
+    </script>
+</head>
+
+<body class="body" translate="no">
+    <form class="form" method="post" action="/inicio/">
+        <h2 class="h2">PASARELA DE PAGOS</h2>
+        <p type="Nombre:"><input class="txt_data" name="txt_name" placeholder="Escribe tu nombre..."></p>
+        <p type="Apellido:"><input class="txt_data" name="txt_lastname" placeholder="Escribe tu apellido..."></p>
+        <p type="Email:"><input class="txt_data" name="txt_email" placeholder="Escribe tu correo..."></p>
+        <button class="btn_pagar">Generar Formulario</button>
+        <div class="footer_data">
+            <span class="fa fa-phone"></span>01 213 0808
+            <span class="fa fa-envelope-o"></span>soporteint@izipay.com
+        </div>
+    </form>
+</body>
+
+</html>
